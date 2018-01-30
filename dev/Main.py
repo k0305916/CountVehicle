@@ -1,7 +1,7 @@
 import os
 from multiprocessing import cpu_count
-from concurrent.futures import ThreadPoolExecutor
-
+from concurrent.futures import ThreadPoolExecutor, wait
+from FileOper import processfile
 
 def main(path):
     """
@@ -19,16 +19,10 @@ def main(path):
 
     #引入线程池进行多线程操作
     executor = ThreadPoolExecutor(cpucount)
+    futures = []
     for csv in csvfiles:
-        executor.submit(processfile, csv)
-    executor
-
-
-def processfile(filepath):
-    """
-    处理文件
-    """
-    f_read = open(filepath)
+        futures.append(executor.submit(processfile, csv))
+    wait(futures)
 
 
 main("E:\\Business\\Program\\Python\\CountVehicle\\data")
