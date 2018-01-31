@@ -1,18 +1,23 @@
 import os
+import sys
 from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
-from FileOper import FileOper
+# from FileOper import FileOper
 
-def main(path):
+def main(argv=None):
     """
     input fie path
     """
+    if argv is None:
+        print("请输入正确的文件路径")
+        return
+    
+    path = argv[1]
     if os.path.isdir(path) != True:
         print("请输入正确的文件夹路径.")
         return
 
     #获取该路径下的所有以.csv结尾的文件
-    os.walk(path)
     csvfiles = [os.path.join(r, file) for r, d, files in os.walk(
         path) for file in files if file.endswith(".csv")]
     cpucount = cpu_count()
@@ -29,5 +34,5 @@ def funcprocess(filepath):
     file = FileOper(filepath)
     file.processfile(filepath)
 
-
-main("E:\\Business\\Program\\Python\\CountVehicle\\data")
+if __name__ == "__main__":
+    sys.exit(main())
