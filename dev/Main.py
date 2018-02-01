@@ -46,8 +46,8 @@ def main():
     for filelist in FILELISTCONVERT:
         for file in filelist:
             futures.append(executor.submit(funccountfile, file))
-    wait(futures)
-    futures.clear()
+        wait(futures)
+        futures.clear()
     print("空车计算完成，请检查。")
 
 def funccutfile(filepath):
