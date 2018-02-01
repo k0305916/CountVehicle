@@ -52,14 +52,15 @@ class FileOper:
         '输出文件'
         path, file = os.path.split(self.__filepath)
         name, extention = os.path.splitext(file)
-        if not os.path.exists(path+'\\'+name):
-            os.mkdir(path+'\\'+name)
+        directory = path+'\\'+name
+        if not os.path.exists(directory):
+            os.mkdir(directory)
         for _data in self.__data:
-            outfile = open(path+'\\'+name+'\\'+_data+extention, 'wt')
+            outfile = open(directory+'\\'+_data+extention, 'wt')
             outfile.writelines(
                 'car_number,trip_id,datetime_record,longitude,latitude,speed,direction\n')
             outfile.flush()
-            self.__filelist.append(path+'\\'+name+'\\'+_data+extention)
+            self.__filelist.append(directory+'\\'+_data+extention)
             for data in self.__data[_data]:
                 outfile.writelines(data.car_number+',' +
                                    data.trip_id+',' +
