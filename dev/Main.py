@@ -2,17 +2,22 @@ import os
 import sys
 from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
-# from FileOper import FileOper
+from FileOper import FileOper
+from FileConvert import FileConvert
 
-def main(argv=None):
+FILELIST = []
+FILELISTCONVERT = []
+
+
+def main():
     """
     input fie path
     """
-    if argv is None:
-        print("请输入正确的文件路径")
+    if len(sys.argv) <= 2:
+        print("请输入正确的参数：文件夹路径 shp文件夹路径")
         return
-    
-    path = argv[1]
+
+    path = sys.argv[1]
     if os.path.isdir(path) != True:
         print("请输入正确的文件夹路径.")
         return
@@ -23,16 +28,33 @@ def main(argv=None):
     cpucount = cpu_count()
 
     #引入线程池进行多线程操作
-    executor = ThreadPoolExecutor(cpucount)
+    executor = ThreadPoolExecutor(1)
     futures = []
     for csv in csvfiles:
-        futures.append(executor.submit(funcprocess, csv))
+        futures.append(executor.submit(funccutfile, csv))
     wait(futures)
+    futures.clear()
+    print("切分文件完成，开始进行文件转换.....")
+    # for filelist in FILELIST:
+    #     for file in filelist:
+    #         futures.append(executor.submit(fucconvertfile, file))
+    # wait(futures)
+    # print("文件转换完成，开始计算空车数量.....")
 
-def funcprocess(filepath):
+
+def funccutfile(filepath):
     '生成文件操作对象，并处理'
     file = FileOper(filepath)
-    file.processfile(filepath)
+    file.cutfile()
+    file.outputfile()
+    FILELIST.append(file.getfilelist)
+
+
+def fucconvertfile(filepath):
+    '转换文件'
+    file = FileConvert(filepath)
+    file.convert()
+
 
 if __name__ == "__main__":
     sys.exit(main())
