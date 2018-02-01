@@ -16,6 +16,10 @@
             "envFile": "${workspaceFolder}/.env",
             "debugOptions": [
                 "RedirectOutput"
+            ],
+            "args": [
+                "E:\\Business\\Python\\CountVehicle\\CountVehicle\\data",
+                "E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\demo"
             ]
         },
         {
