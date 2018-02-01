@@ -21,7 +21,7 @@ class FileCount:
                 fristline = True
                 continue
 
-            value = eachline.replace('\n','').split(',')
+            value = eachline.replace('\n', '').split(',')
             vehicle = Vehicle()
             vehicle.car_number = value[0]
             vehicle.trip_id = value[1]
@@ -75,8 +75,7 @@ class FileCount:
                 'retion,count\n')
             outfile.flush()
             for data in self.__filecount[_data]:
-                outfile.writelines(data+','+
-                                    str((self.__filecount[_data])[data])+'\n')
+                outfile.writelines(data+',' +
+                                   str((self.__filecount[_data])[data])+'\n')
                 outfile.flush()
             outfile.close()
-
