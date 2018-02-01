@@ -61,21 +61,5 @@ class FileCount:
             return '5'
         else:
             return '6'
-
-    def outputfile(self):
-        "输出文件"
-        path, file = os.path.split(self.__filepath)
-        name, extention = os.path.splitext(file)
-        directory = path+'\\'+name+'_count'
-        if not os.path.exists(directory):
-            os.mkdir(directory)
-        for _data in self.__filecount:
-            outfile = open(directory+'\\'+_data+'.txt', 'wt')
-            outfile.writelines(
-                'retion,count\n')
-            outfile.flush()
-            for data in self.__filecount[_data]:
-                outfile.writelines(data+',' +
-                                   str((self.__filecount[_data])[data])+'\n')
-                outfile.flush()
-            outfile.close()
+    def getresult(self):
+        return self.__filecount
