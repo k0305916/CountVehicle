@@ -32,12 +32,14 @@ class FileCount:
             vehicle.direction = value[6]
             vehicle.region = value[7]
 
+            if int(vehicle.region) == last:
+                continue
+
             timerange = self.__time(vehicle.datetime_record)
 
             if timerange in self.__filecount:
                 region = self.__filecount[timerange]
                 if vehicle.region in region:
-                    if region[vehicle.region] != last:
                         region[vehicle.region] += 1
                 else:
                     region[vehicle.region] = 1
@@ -48,17 +50,17 @@ class FileCount:
     def __time(self, time):
         timeobj = datetime.strptime(time, '%Y/%m/%d %H:%M')
         if timeobj.hour >= 0 and timeobj.hour < 4:
-            return 1
+            return '1'
         elif timeobj.hour >= 4 and timeobj.hour < 8:
-            return 2
+            return '2'
         elif timeobj.hour >= 8 and timeobj.hour < 12:
-            return 3
+            return '3'
         elif timeobj.hour >= 12 and timeobj.hour < 16:
-            return 4
+            return '4'
         elif timeobj.hour >= 16 and timeobj.hour < 20:
-            return 5
+            return '5'
         else:
-            return 6
+            return '6'
 
     def outputfile(self):
         "输出文件"
@@ -74,7 +76,7 @@ class FileCount:
             outfile.flush()
             for data in self.__filecount[_data]:
                 outfile.writelines(data+','+
-                                    self.__filecount[_data][data])
+                                    str((self.__filecount[_data])[data])+'\n')
                 outfile.flush()
             outfile.close()
 
