@@ -1,5 +1,6 @@
 import os
 import sys
+import threading
 from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor, wait
 from FileOper import FileOper
@@ -10,6 +11,8 @@ FILELIST = []
 FILELISTCONVERT = [['E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\112151.csv',
                     'E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\402088.csv']]
 
+FILERESULT = []
+MUTEX = threading.Lock()
 
 def main():
     """
@@ -44,10 +47,13 @@ def main():
     # futures.clear()
     # print("文件转换完成，开始计算空车数量.....")
     for filelist in FILELISTCONVERT:
+        path, f = os.path.split(filelist[0])
         for file in filelist:
             futures.append(executor.submit(funccountfile, file))
         wait(futures)
         futures.clear()
+        countresult(path)
+        FILERESULT.clear()
     print("空车计算完成，请检查。")
 
 def funccutfile(filepath):
@@ -55,7 +61,9 @@ def funccutfile(filepath):
     file = FileOper(filepath)
     file.cutfile()
     file.outputfile()
+    MUTEX.acquire()
     FILELIST.append(file.getfilelist)
+    MUTEX.release()
 
 
 def fucconvertfile(filepath):
@@ -67,7 +75,25 @@ def funccountfile(filepath):
     '计算空车数量'
     file = FileCount(filepath)
     file.run()
-    file.outputfile()
+    MUTEX.acquire()
+    FILERESULT = file.getresult()
+    MUTEX.release()
+
+def countresult(directory):
+    "输出计算后的文件"
+    directory = directory+'_count'
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+    for _data in FILERESULT:
+        outfile = open(directory+'\\'+_data+'.txt', 'wt')
+        outfile.writelines(
+            'retion,count\n')
+        outfile.flush()
+        for data in FILERESULT[_data]:
+            outfile.writelines(data+',' +
+                               str((FILERESULT[_data])[data])+'\n')
+            outfile.flush()
+        outfile.close()
 
 
 if __name__ == "__main__":
