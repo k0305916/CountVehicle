@@ -7,7 +7,8 @@ from FileConvert import FileConvert
 from FileCount import FileCount
 
 FILELIST = []
-FILELISTCONVERT = [['E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\112151.csv']]
+FILELISTCONVERT = [['E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\112151.csv',
+                    'E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\402088.csv']]
 
 
 def main():
