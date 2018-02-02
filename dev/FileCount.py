@@ -66,16 +66,17 @@ class FileCount:
             last = int(vehicle.region)
 
     def __time(self, time):
-        timeobj = datetime.strptime(time, '%Y/%m/%d %H:%M')
-        if timeobj.hour >= 0 and timeobj.hour < 4:
+        hour = int(time.replace("'","").split('-')[2].split(' ')[-1].split(':')[0])
+        #timeobj = datetime.strptime(time, '%Y/%m/%d %H:%M:%s')
+        if hour >= 0 and hour < 4:
             return '1'
-        elif timeobj.hour >= 4 and timeobj.hour < 8:
+        elif hour >= 4 and hour < 8:
             return '2'
-        elif timeobj.hour >= 8 and timeobj.hour < 12:
+        elif hour >= 8 and hour < 12:
             return '3'
-        elif timeobj.hour >= 12 and timeobj.hour < 16:
+        elif hour >= 12 and hour < 16:
             return '4'
-        elif timeobj.hour >= 16 and timeobj.hour < 20:
+        elif hour >= 16 and hour < 20:
             return '5'
         else:
             return '6'

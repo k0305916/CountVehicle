@@ -53,8 +53,8 @@ class FileConvert:
         dbf = Dbf5(out_feature_class.split('.')[0]+'.dbf')
         #df1 = dbf.to_dataframe()
         #使用以下的to_csv会出错，细节不清楚
-        #dbf.to_csv(outpath1, sep=',', mode='a', index=True)
-        dbf.to_csv(outpath1)
+        #dbf.to_csv(outpath1, mode='a', index=True)
+        dbf.to_csv(outpath1, sep=',')
         print("Convert dbf to csv complete! \n")
         #arcpy.Delete_management(out_feature_class)
 
