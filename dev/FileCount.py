@@ -1,6 +1,20 @@
+# coding=utf-8
 import os
 from datetime import datetime
-from FileOper import Vehicle
+
+class Vehicle:
+    '车辆结构数据'
+    def __init__(self):
+        self.Join_Count = ""
+        self.TARGET_FID = ""
+        self.car_number = ""
+        self.trip_id = ""
+        self.datetime_record = ""
+        self.longitude = ""
+        self.latitude = ""
+        self.speed = ""
+        self.direction = ""
+        self.taz = ""
 
 
 class FileCount:
@@ -24,14 +38,16 @@ class FileCount:
 
             value = eachline.replace('\n', '').split(',')
             vehicle = Vehicle()
-            vehicle.car_number = value[0]
-            vehicle.trip_id = value[1]
-            vehicle.datetime_record = value[2]
-            vehicle.longitude = value[3]
-            vehicle.latitude = value[4]
-            vehicle.speed = value[5]
-            vehicle.direction = value[6]
-            vehicle.region = value[7]
+            vehicle.Join_Count = value[0]
+            vehicle.TARGET_FID = value[1]
+            vehicle.car_number = value[2]
+            vehicle.trip_id = value[3]
+            vehicle.datetime_record = value[4]
+            vehicle.longitude = value[5]
+            vehicle.latitude = value[6]
+            vehicle.speed = value[7]
+            vehicle.direction = value[8]
+            vehicle.region = value[9]
 
             #这个地方需要判断是否要求是在同一个时间段
             if int(vehicle.region) == last:
