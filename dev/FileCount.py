@@ -5,11 +5,12 @@ from FileOper import Vehicle
 
 class FileCount:
     '计算空车数量'
-    __filepath = ""
-    __filecount = {}
+    # __filepath = ""
+    # __filecount = {}
 
     def __init__(self, filepath):
         self.__filepath = filepath
+        self.__filecount={}
 
     def run(self):
         '解析文件，计算空车数量'
@@ -32,6 +33,7 @@ class FileCount:
             vehicle.direction = value[6]
             vehicle.region = value[7]
 
+            #这个地方需要判断是否要求是在同一个时间段
             if int(vehicle.region) == last:
                 continue
 

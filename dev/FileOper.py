@@ -3,24 +3,23 @@ import os
 
 class Vehicle:
     '车辆结构数据'
-    car_number = ""
-    trip_id = ""
-    datetime_record = ""
-    longitude = ""
-    latitude = ""
-    speed = ""
-    direction = ""
-    region = ""
+    def __init__(self):
+        self.car_number = ""
+        self.trip_id = ""
+        self.datetime_record = ""
+        self.longitude = ""
+        self.latitude = ""
+        self.speed = ""
+        self.direction = ""
+        self.region = ""
 
 
 class FileOper:
     '处理文件的类'
-    __data = {}
-    __filepath = ""
-    __filelist = []
-
     def __init__(self, filepath):
         self.__filepath = filepath
+        self.__filelist = []
+        self.__data = {}
 
     def cutfile(self):
         """
