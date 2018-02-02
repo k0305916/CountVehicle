@@ -12,10 +12,24 @@ from FileCount import FileCount
 #python中全局变量的注意点：
 #http://blog.csdn.net/dongtingzhizi/article/details/8973569
 #,'H:\\LiFan\\CountVehicle\\data\\0hunting\\p1\\402088.csv'
-FILELIST = [['H:\\LiFan\\CountVehicle\\data\\0hunting\\p1\\20131223.csv']]
+#FILELIST = [['H:/LiFan/CountVehicle/data/0hunting/demo/demodata.csv'],['H:/LiFan/CountVehicle/data/0hunting/demo/demodata1.csv']]
+#FILELIST = []
 
-FILELISTCONVERT = [['E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\112151.csv',
-                    'E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\402088.csv']]
+FILELIST = [['E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141212/112151_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141212/112152_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141212/402085_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141212/402087_spajoin.csv'],
+            ['E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/112153_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/112154_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/112155_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/402082_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/402083_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/402084_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/402088_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/402089_spajoin.csv',
+             'E:/Business/Python/CountVehicle/CountVehicle/data/p2/20141211/402090_spajoin.csv']]
+
+FILELISTCONVERT = []
 
 FILERESULT = {}
 MUTEX = threading.Lock()
@@ -29,13 +43,16 @@ def main():
     #     return
 
     # path = sys.argv[1]
-    # if os.path.isdir(path) != True:
+    # directory = sys.argv[2]
+    # if (not os.path.isdir(path)) or (not os.path.isdir(directory)):
     #     print("请输入正确的文件夹路径.")
     #     return
+    directory = "H:/LiFan/CountVehicle/data/0hunting/demo/shp"
+    path = "H:/LiFan/CountVehicle/data/0hunting/demo"
 
-    #获取该路径下的所有以.csv结尾的文件
-    # csvfiles = [os.path.join(r, file) for r, d, files in os.walk(
-    #     path) for file in files if file.endswith(".csv")]
+    # 获取该路径下的所有以.csv结尾的文件
+    csvfiles = [os.path.join(r, file) for r, d, files in os.walk(
+        path) for file in files if file.endswith(".csv")]
     cpucount = cpu_count()
 
     # #引入线程池进行多线程操作
@@ -44,30 +61,34 @@ def main():
     # for csv in csvfiles:
     #     futures.append(executor.submit(funccutfile, csv))
     # wait(futures)
-    ## futures.clear()
-	#futures[:] = []
-    # print("切分文件完成，开始进行文件转换.....")
-    directory = "H:/LiFan/CountVehicle/data/0hunting/shp/"
+    # futures.clear()
+    futures[:] = []
+    print("切分文件完成，开始进行文件转换.....")
     for filelist in FILELIST:
         for file in filelist:
             futures.append(executor.submit(fucconvertfile, file,directory))
-    wait(futures)
-    futures[:] = []
-	#python2.7不支持List.clear()
-	#futures.clear()
-	#b[:] = []采用这种方式清空
-	
-    print("文件转换完成，开始计算空车数量.....")
-    # for filelist in FILELISTCONVERT:
-    #     path, f = os.path.split(filelist[0])
-    #     for file in filelist:
-    #         futures.append(executor.submit(funccountfile, file))
-    #     wait(futures)
-    #     futures.clear()
-	#	  futures[:] = []
-    #     countresult(path)
-    #     FILERESULT.clear()
-    # print("空车计算完成，请检查。")
+        #有可能存在死了的情景。。。因此有个超时的设置
+        wait(futures,10*1000)
+        #python2.7不支持List.clear()
+        #futures.clear()
+        #b[:] = []采用这种方式清空
+        futures[:] = []
+
+        print("空车数量开始计算")
+        dir = ""
+        for file in FILELISTCONVERT:
+            d, f = os.path.split(file)
+            dir = d
+            futures.append(executor.submit(funccountfile, file))
+        wait(futures)
+        #futures.clear()
+        futures[:] = []
+        countresult(dir)
+        FILERESULT.clear()
+        print("空车计算完成")
+
+    print("所有空车数量全部计算完成")
+
 
 def funccutfile(filepath):
     '生成文件操作对象，并处理'
@@ -75,14 +96,21 @@ def funccutfile(filepath):
     file.cutfile()
     file.outputfile()
     MUTEX.acquire()
-    FILELIST.append(file.getfilelist)
+    FILELIST.append(file.getfilelist())
     MUTEX.release()
 
 
 def fucconvertfile(filepath,directory):
     '转换文件'
+    # file = FileConvert(filepath,directory)
+    # file.convert()
+    # MUTEX.acquire()
+    # FILELISTCONVERT.append(file.getresultfile())
+    # MUTEX.release()
     file = FileConvert(filepath,directory)
-    file.convert()
+    MUTEX.acquire()
+    FILELISTCONVERT.append(file.getresultfile1())
+    MUTEX.release()
 
 def funccountfile(filepath):
     '计算空车数量'
