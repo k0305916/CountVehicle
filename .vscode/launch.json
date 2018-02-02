@@ -18,8 +18,8 @@
                 "RedirectOutput"
             ],
             "args": [
-                "E:\\Business\\Python\\CountVehicle\\CountVehicle\\data",
-                "E:\\Business\\Python\\CountVehicle\\CountVehicle\\data\\demo"
+                "E:/Business/Python/CountVehicle/CountVehicle/data",
+                "E:/Business/Python/CountVehicle/CountVehicle/data/shp"
             ]
         },
         {
